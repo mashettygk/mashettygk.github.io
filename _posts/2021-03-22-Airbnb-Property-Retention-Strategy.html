@@ -10,3 +10,291 @@ tags: [deep Leanring, machine learning, classification, trading, error rate]
 <link href="https://github.com/mashettygk/Image-Classification-for-Trading-Strategies/blob/main/readme.md" rel="stylesheet">
 
 https://github.com/mashettygk/Image-Classification-for-Trading-Strategies/blob/main/readme.md
+
+
+<article class="markdown-body entry-content container-lg" itemprop="text">
+<h1 dir="auto"><a id="user-content-trading-strategies---image-classification" class="anchor" aria-hidden="true" href="#trading-strategies---image-classification"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Trading Strategies - Image Classification</h1><p dir="auto">This repository contains all the files of the stock prediction project, related to my Machine Learning class.</p>
+<h1 dir="auto"><a id="user-content-table-of-contents" class="anchor" aria-hidden="true" href="#table-of-contents"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Table of Contents</h1>
+<ul dir="auto">
+<li><a href="#overview">Overview</a></li>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#trading-strategies">Trading Strategies</a>
+<ul dir="auto">
+<li><a href="#a-bollinger-bands">1. Bollinger Bands</a></li>
+<li><a href="#b-relative-strength-index">2. Relative Strength Index</a></li>
+</ul>
+</li>
+<li><a href="#methodology">Methodology</a>
+<ul dir="auto">
+<li><a href="#1image-generation">1. Image Generation</a>
+<ul dir="auto">
+<li><a href="#data-collection">Data Collection</a></li>
+<li><a href="#data-preparation">Data Preparation</a></li>
+<li><a href="#signal-generation">Signal Generation</a></li>
+<li><a href="#image-labeling">Image Labeling</a></li>
+</ul>
+</li>
+<li><a href="#2feature-engineering">2. Feature Engineering</a>
+<ul dir="auto">
+<li><a href="#rescaling">Rescaling</a></li>
+<li><a href="#model-architecture">Model Architecture</a></li>
+</ul>
+</li>
+<li><a href="#3modeling">3. Modeling</a>
+<ul dir="auto">
+<li><a href="#train--validation-split">Train &amp; Validation Split</a></li>
+<li><a href="#model-architecture">Model Architecture</a></li>
+<li><a href="#performance-metrics">Model Selection</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+<h2 dir="auto"><a id="user-content-overview" class="anchor" aria-hidden="true" href="#overview"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Overview</h2>
+<p dir="auto">Trading decisions have always been subjective i.e., there is <code>no definitive answer</code> for a decision when a <code>trader buys/sells/holds</code> a stock. This means that the subject-matter experts are in high demand, and we need to <code>invest in automation</code> to minimize human intervention. So let us explore the feasibility of building a new system that can <code>replicate the way humans trade</code>.</p>
+<h2 dir="auto"><a id="user-content-introduction" class="anchor" aria-hidden="true" href="#introduction"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Introduction</h2>
+<p dir="auto">We will be analyzing the daily data of S&amp;P 500 Global index from <code>03-Jan-1983</code> till <code>18-Jun-2021</code>.We will use this data and <code>generate images and labels (buy/sell/hold)</code> using some popular trading strategies. Then we use these <code>images and train the model</code> to classify the images and <code>compare that with the labels</code> that we have generated for performance evaluation.</p>
+<h2 dir="auto"><a id="user-content-trading-strategies" class="anchor" aria-hidden="true" href="#trading-strategies"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Trading Strategies</h2>
+<h3 dir="auto"><a id="user-content-a-bollinger-bands" class="anchor" aria-hidden="true" href="#a-bollinger-bands"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>a. Bollinger Bands</h3>
+<p dir="auto">Bollinger Bands are widely used among traders. The indicator comprises an <code>upper band</code>, <code>lower band</code> and <code>moving average line</code>. The two trading bands are placed <code>two standard deviations</code> above and below the moving average (usually 20 periods) line. We use two standard deviations to capture a confidence interval of 95%. In the below image, we will make a <code>sell</code> decision when the <code>actual closing index crosses</code> the <code>upper band</code> and a <code>buy</code> decision when <code>actual closing index falls below</code> the <code>lower band</code>.</p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="/mashettygk/Image-Classification-for-Trading-Strategies/blob/main/stockpred/images/bb.png"><img src="/mashettygk/Image-Classification-for-Trading-Strategies/raw/main/stockpred/images/bb.png" alt="bb" style="max-width: 100%;"></a></p>
+<h3 dir="auto"><a id="user-content-b-relative-strength-index" class="anchor" aria-hidden="true" href="#b-relative-strength-index"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>b. Relative strength index</h3>
+<p dir="auto">The relative strength index (RSI) is a momentum indicator that measures the magnitude of recent price changes to evaluate <code>overbought</code> or <code>oversold</code> conditions in the price of a stock or other asset. The RSI is calculated using the formula <code>[100 - 100/(1+RS)]</code> where <code>RS</code> is the ratio of the Exponential Moving Average (window = 14) of all positive changes to the negative ones. An asset/stock is usually considered <code>overbought</code> =&gt; <code>ready to sell</code> when the RSI is <code>above 70%</code>and <code>oversold</code> =&gt; <code>ready to buy</code> when it is <code>below 30%</code>. In the below image, we <code>sell</code> at <code>red</code> arrows and <code>buy</code> at the <code>blue</code> ones.</p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="/mashettygk/Image-Classification-for-Trading-Strategies/blob/main/stockpred/images/RSI.png"><img src="/mashettygk/Image-Classification-for-Trading-Strategies/raw/main/stockpred/images/RSI.png" alt="rsi" style="max-width: 100%;"></a></p>
+<h2 dir="auto"><a id="user-content-methodology" class="anchor" aria-hidden="true" href="#methodology"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Methodology</h2>
+<p dir="auto">Now that we have understood about the trading strategies, let us apply these to the <code>S&amp;P 500 Global index data</code>. Below are the steps I have preformed to achieve this.</p>
+<h3 dir="auto"><a id="user-content-1image-generation" class="anchor" aria-hidden="true" href="#1image-generation"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>1.Image Generation</h3>
+<p dir="auto">We have pulled the required data from <code>yahoo finance</code>. This provides information about the daily <code>open</code>,<code>close</code>,<code>high</code> and <code>low</code> values for the S&amp;P 500 index. But, our <code>goal</code> is to <code>mimic the human decision</code>; and traders look at the trend graph and make a decision by using their quantitative finance knowledge. So we now generate images using the tabular data.</p>
+<h4 dir="auto"><a id="user-content-data-collection" class="anchor" aria-hidden="true" href="#data-collection"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Data Collection</h4>
+<p dir="auto">I have used <code>yahoo finance</code> API to get the data. Below is the code I have used to pull the data. You can change the <code>ticker</code>, <code>start</code> and <code>end</code> dates to get data for different stocks.</p>
+<div class="highlight highlight-source-python position-relative overflow-auto"><pre><span class="pl-k">import</span> <span class="pl-s1">fix_yahoo_finance</span> <span class="pl-k">as</span> <span class="pl-s1">yf</span>
+ 
+<span class="pl-c"># Pull data from yahoo</span>
+<span class="pl-s1">ticker</span> <span class="pl-c1">=</span> <span class="pl-s">'^GSPC'</span>
+<span class="pl-s1">df</span> <span class="pl-c1">=</span> <span class="pl-s1">yf</span>.<span class="pl-en">download</span>(<span class="pl-s1">ticker</span>, <span class="pl-s1">start</span><span class="pl-c1">=</span><span class="pl-s">'1983-01-01'</span>, <span class="pl-s1">end</span><span class="pl-c1">=</span><span class="pl-s">'2021-06-20'</span>)</pre><div class="zeroclipboard-container position-absolute right-0 top-0">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn js-clipboard-copy m-2 p-0 tooltipped-no-delay" data-copy-feedback="Copied!" data-tooltip-direction="w" value="import fix_yahoo_finance as yf
+ 
+# Pull data from yahoo
+ticker = '^GSPC'
+df = yf.download(ticker, start='1983-01-01', end='2021-06-20')" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon m-2">
+    <path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none m-2">
+    <path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<h4 dir="auto"><a id="user-content-data-preparation" class="anchor" aria-hidden="true" href="#data-preparation"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Data Preparation</h4>
+<p dir="auto">Below is the data structure of our tabular data. We use the <code>Close</code> value of each day for our whole analysis. Now we apply the <code>Bollinger Bands &amp; RSI</code> strategies to the Close value and calculate the <code>Moving Average (SMA)</code>, <code>Bands (UB &amp; LB)</code> and <code>RSI (RSI) index</code> for each day.</p>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Open</th>
+<th>High</th>
+<th>Low</th>
+<th>Close</th>
+<th>Adj Close</th>
+<th>Volume</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>14-06-21</td>
+<td>4248.31</td>
+<td>4255.59</td>
+<td>4234.07</td>
+<td>4255.15</td>
+<td>4255.15</td>
+<td>3612050000</td>
+</tr>
+<tr>
+<td>15-06-21</td>
+<td>4255.28</td>
+<td>4257.16</td>
+<td>4238.35</td>
+<td>4246.59</td>
+<td>4246.59</td>
+<td>3578450000</td>
+</tr>
+<tr>
+<td>16-06-21</td>
+<td>4248.87</td>
+<td>4251.89</td>
+<td>4202.45</td>
+<td>4223.7</td>
+<td>4223.7</td>
+<td>3722050000</td>
+</tr>
+<tr>
+<td>17-06-21</td>
+<td>4220.37</td>
+<td>4232.29</td>
+<td>4196.05</td>
+<td>4221.86</td>
+<td>4221.86</td>
+<td>3952110000</td>
+</tr>
+</tbody>
+</table>
+<h4 dir="auto"><a id="user-content-signal-generation" class="anchor" aria-hidden="true" href="#signal-generation"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Signal Generation</h4>
+<p dir="auto">Based on the values of the above table, we generate signal indicators for each day. Below is the data after the signal generation. <code>1 --&gt; Buy</code>, <code>-1 --&gt; Sell</code> and <code>0 --&gt; Hold</code></p>
+<table>
+<thead>
+<tr>
+<th align="center">Date</th>
+<th align="center">Close</th>
+<th align="center">SMA</th>
+<th align="center">UB</th>
+<th align="center">LB</th>
+<th align="center">RSI</th>
+<th align="center">BB Signal</th>
+<th align="center">RSI Signal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">06-05-21</td>
+<td align="center">4201.62</td>
+<td align="center">4167.12</td>
+<td align="center">4219.78</td>
+<td align="center">4114.46</td>
+<td align="center">61.75</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">07-05-21</td>
+<td align="center">4232.60</td>
+<td align="center">4172.31</td>
+<td align="center">4229.34</td>
+<td align="center">4115.28</td>
+<td align="center">68.70</td>
+<td align="center">-1</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">10-05-21</td>
+<td align="center">4188.43</td>
+<td align="center">4175.33</td>
+<td align="center">4228.77</td>
+<td align="center">4121.89</td>
+<td align="center">52.89</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">11-05-21</td>
+<td align="center">4152.10</td>
+<td align="center">4175.86</td>
+<td align="center">4228.09</td>
+<td align="center">4123.62</td>
+<td align="center">43.41</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">12-05-21</td>
+<td align="center">4063.04</td>
+<td align="center">4172.78</td>
+<td align="center">4242.17</td>
+<td align="center">4103.38</td>
+<td align="center">28.81</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+</tbody>
+</table>
+<h4 dir="auto"><a id="user-content-image-labeling" class="anchor" aria-hidden="true" href="#image-labeling"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Image Labeling</h4>
+<p dir="auto">As we created signals for three outcomes, <code>buy/sell/hold</code> let us limit our decisions to either buying or selling as a first strategy. So we are going to <code>create images and label them either buy/sell</code> based on the <code>BB Signal/ RSI Signal</code>. I have created images of size <code>125 x 125</code> and labeled them as <code>buy if the trading strategy suggests a buy</code> or sell otherwise. The distribution of images is below for each strategy.</p>
+<table>
+<thead>
+<tr>
+<th align="center">Strategy</th>
+<th align="center">Buy</th>
+<th align="center">Sell</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">Bollinger Bands</td>
+<td align="center">433</td>
+<td align="center">461</td>
+</tr>
+<tr>
+<td align="center">Rel Strength Index</td>
+<td align="center">651</td>
+<td align="center">1721</td>
+</tr>
+</tbody>
+</table>
+<h3 dir="auto"><a id="user-content-2feature-engineering" class="anchor" aria-hidden="true" href="#2feature-engineering"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>2.Feature Engineering</h3>
+<p dir="auto">We now have the images, but we need to capture the spatial information and reduce the dimensions of the neural network that we are planning to train. I have performed the below steps to achieve these goals.</p>
+<h4 dir="auto"><a id="user-content-rescaling" class="anchor" aria-hidden="true" href="#rescaling"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Rescaling</h4>
+<p dir="auto">The image is now in the RGB format, we will rescale the image into size of <code>64 x 64 x 3</code> using the below code.</p>
+<div class="highlight highlight-source-python position-relative overflow-auto"><pre><span class="pl-c"># Import the Libraries</span>
+<span class="pl-k">from</span> <span class="pl-s1">keras</span>.<span class="pl-s1">preprocessing</span>.<span class="pl-s1">image</span> <span class="pl-k">import</span> <span class="pl-v">ImageDataGenerator</span>
+<span class="pl-c"># Preprocessing the Training set</span>
+<span class="pl-s1">train_datagen</span> <span class="pl-c1">=</span> <span class="pl-v">ImageDataGenerator</span>(<span class="pl-s1">rescale</span> <span class="pl-c1">=</span> <span class="pl-c1">1.</span><span class="pl-c1">/</span><span class="pl-c1">255</span>,
+                                   <span class="pl-s1">shear_range</span> <span class="pl-c1">=</span> <span class="pl-c1">0.2</span>,
+                                   <span class="pl-s1">zoom_range</span> <span class="pl-c1">=</span> <span class="pl-c1">0.2</span>,
+                                   <span class="pl-s1">horizontal_flip</span> <span class="pl-c1">=</span> <span class="pl-c1">True</span>)
+
+<span class="pl-s1">training_set</span> <span class="pl-c1">=</span> <span class="pl-s1">train_datagen</span>.<span class="pl-en">flow_from_directory</span>(<span class="pl-s">'train_data_dir'</span>,
+                                                 <span class="pl-s1">target_size</span> <span class="pl-c1">=</span> (<span class="pl-c1">64</span>, <span class="pl-c1">64</span>),
+                                                 <span class="pl-s1">batch_size</span> <span class="pl-c1">=</span> <span class="pl-c1">32</span>,
+                                                 <span class="pl-s1">class_mode</span> <span class="pl-c1">=</span> <span class="pl-s">'binary'</span>)</pre><div class="zeroclipboard-container position-absolute right-0 top-0">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn js-clipboard-copy m-2 p-0 tooltipped-no-delay" data-copy-feedback="Copied!" data-tooltip-direction="w" value="# Import the Libraries
+from keras.preprocessing.image import ImageDataGenerator
+# Preprocessing the Training set
+train_datagen = ImageDataGenerator(rescale = 1./255,
+                                   shear_range = 0.2,
+                                   zoom_range = 0.2,
+                                   horizontal_flip = True)
+
+training_set = train_datagen.flow_from_directory('train_data_dir',
+                                                 target_size = (64, 64),
+                                                 batch_size = 32,
+                                                 class_mode = 'binary')" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon m-2">
+    <path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none m-2">
+    <path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<h4 dir="auto"><a id="user-content-model-architecture" class="anchor" aria-hidden="true" href="#model-architecture"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Model Architecture</h4>
+<p dir="auto">This rescaled image of size <code>64 x 64 x 3</code> is passed as the input to the below network.
+<a target="_blank" rel="noopener noreferrer" href="/mashettygk/Image-Classification-for-Trading-Strategies/blob/main/stockpred/images/model.png"><img src="/mashettygk/Image-Classification-for-Trading-Strategies/raw/main/stockpred/images/model.png" alt="model" style="max-width: 100%;"></a></p>
+<ul dir="auto">
+<li>The convolution layers have <code>32 filters</code> of kernel size <code>3 x 3</code> and the max pooling layers have <code>32 filters</code> of kernel size <code>2 x 2</code>.</li>
+<li>The output after the first convolution layer has the size <code>62 x 62</code> because <code>Output Size = Input Size - Kernel Size + 1</code>.</li>
+<li>The size of the output from the first max pooling layer is <code>31 x 31</code> because <code>Output Size = InputSize / Kernel Size</code>.</li>
+<li>We need to flatten the <code>32 filters</code> of the images of size <code>14 x 14</code>, so we add a dense layer with <code>6272 (14 x 14 x 32)</code> neurons, followed by a fully connected layer with size of 128.</li>
+<li>The activation function used here is <code>sigmoid</code> for the buy or sell binary decision.</li>
+</ul>
+<h3 dir="auto"><a id="user-content-3modeling" class="anchor" aria-hidden="true" href="#3modeling"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>3.Modeling</h3>
+<p dir="auto">Now we have the images and model architecture ready, so let us proceed with the modeling part. The important things to keep in mind here is to not <code>overfit</code> the data and select a <code>robust performance metric</code> for a classification problem like this.</p>
+<h4 dir="auto"><a id="user-content-train--validation-split" class="anchor" aria-hidden="true" href="#train--validation-split"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Train &amp; Validation Split</h4>
+<p dir="auto">I have used stratified selection approach to split the data into training &amp; validation. You can see the split details in the below table for a <code>validation size of 20%</code> of the whole data. The training data is passed into the above model architecture. We are going to validate the model on the validation data on some performance metrics.
+<a target="_blank" rel="noopener noreferrer" href="/mashettygk/Image-Classification-for-Trading-Strategies/blob/main/stockpred/images/Train_Val.png"><img src="/mashettygk/Image-Classification-for-Trading-Strategies/raw/main/stockpred/images/Train_Val.png" alt="split" style="max-width: 100%;"></a></p>
+<h4 dir="auto"><a id="user-content-performance-metrics" class="anchor" aria-hidden="true" href="#performance-metrics"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Performance Metrics</h4>
+<p dir="auto">I have selected <code>Accuracy, Area Under the Curve and F1-Score</code> as my model's performance metrics. After a lot of due diligence, I have achieved a validation <code>AUC of 0.99</code> for the <code>Buy/Sell</code> classification using both <code>BB &amp; RSI strategies</code>. The other model's results are below.
+<a target="_blank" rel="noopener noreferrer" href="/mashettygk/Image-Classification-for-Trading-Strategies/blob/main/stockpred/images/metrics.png"><img src="/mashettygk/Image-Classification-for-Trading-Strategies/raw/main/stockpred/images/metrics.png" alt="metrics" style="max-width: 100%;"></a></p>
+<h2 dir="auto"><a id="user-content-conclusion" class="anchor" aria-hidden="true" href="#conclusion"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Conclusion</h2>
+<ul dir="auto">
+<li>Based on the results of the study, we can conclude that we can build a system that identifies and replicates the way humans trade.</li>
+<li>Since 2010, the RSI has performed incredibly well with a median of close to 4% monthly returns for buys - <a href="https://www.moneyshow.com/articles/tebiwkly08-52167/" rel="nofollow">Source</a></li>
+<li>This model can be improved over time to tell the trader how much to buy/sell, rather than a yes/no for an investment, to maximize the returns.</li>
+<li>This model can be developed into a product to assist investment companies on a large scale with high computing capabilities.</li>
+<li>If you like the approach and want to <code>replicate</code>, start with the <code>requirements.txt</code> file to install all the required packages and run the codes after this.</li>
+</ul>
+<h2 dir="auto"><a id="user-content-sources" class="anchor" aria-hidden="true" href="#sources"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Sources</h2>
+<ul dir="auto">
+<li><a href="https://www.dailyfx.com/education/bollinger-bands/forex-trading.html" rel="nofollow">BB Image</a></li>
+<li><a href="https://www.bigtrends.com/education/is-the-great-rotation-in-the-stock-market-under-way-as-coronavirus-cases-surge-or-is-it-a-false-dawn-heres-what-experts-think/" rel="nofollow">RSI Image</a></li>
+</ul>
+</article>
